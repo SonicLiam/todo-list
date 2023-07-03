@@ -1,5 +1,6 @@
 // src/components/TodoItem.tsx
 import React, {useState} from 'react';
+import './Index.css';
 
 interface TodoItemProps {
     id: number;
@@ -19,40 +20,61 @@ const Index: React.FC<TodoItemProps> = ({
                                             onUpdate,
                                         }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [newTask, setNewTask] = useState(task);
+    const [hover, setHover] = useState(false);
+    const [needToUpdate, setNeedToUpdate] = useState(false);
+    const taskTextRef = React.useRef<HTMLElement>(null);
 
     const handleUpdate = () => {
-        onUpdate(id, newTask);
+        setNeedToUpdate(true);
+        onUpdate(id, taskTextRef!.current!.textContent!);
         setIsEditing(false);
     };
 
-    if (isEditing) {
-        return (
-            <div>
-                <input
-                    type="text"
-                    value={newTask}
-                    onChange={(e) => setNewTask(e.target.value)}
-                />
-                <button onClick={handleUpdate}>更新</button>
-                <button onClick={() => setIsEditing(false)}>取消</button>
-            </div>
-        );
-    }
-
     return (
-        <div>
-            <input
-                type="checkbox"
-                checked={completed}
-                onChange={() => onToggleCompleted(id)}
-            />
-            <span style={{textDecoration: completed ? 'line-through' : 'none'}}>
-        {task}
-      </span>
-            <button onClick={() => setIsEditing(true)}>编辑</button>
-            <button onClick={() => onDelete(id)}>删除</button>
-        </div>
+        <>
+            <div
+                className="todo-item"
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+            >
+                <input
+                    className={'todo-item-checkbox'}
+                    type="checkbox"
+                    checked={completed}
+                    onChange={() => onToggleCompleted(id)}
+                />
+                <span
+                    ref={taskTextRef}
+                    contentEditable={true}
+                    className={`todo-item-task ${completed ? 'todo-item-task-completed' : ''}`}
+                    onFocus={() => setIsEditing(true)}
+                    onBlur={() => {
+                        if (needToUpdate) return;
+                        taskTextRef!.current!.textContent = task;
+                        setIsEditing(false)
+                    }}>
+                {task}
+            </span>
+                {isEditing &&
+                    <button
+                        className={'todo-item-update'}
+                        onMouseDown={() => handleUpdate()}>
+                        修改
+                    </button>
+                }
+                <button
+                    className={'todo-item-delete'}
+                    onClick={() => onDelete(id)}
+                    style={{display: hover && !isEditing ? 'inline' : 'none'}}
+                >
+                    &#10006;
+                </button>
+            </div>
+            {isEditing &&
+                <div className={'todo-item-edit-tip'} >
+                    <p>点击任意处取消编辑</p>
+                </div>}
+        </>
     );
 };
 

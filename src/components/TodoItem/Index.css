@@ -1,0 +1,64 @@
+.todo-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.todo-item-checkbox {
+    margin-left: 24px;
+    margin-right: 10px;
+}
+
+.todo-item-task {
+    flex: 1;
+    text-align: initial;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #4d4d4d;
+    outline: none;
+}
+
+.todo-item-task-completed {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.todo-item-delete {
+    margin-right: 24px;
+    margin-left: 10px;
+    font-size: 12px;
+    font-weight: 200;
+    line-height: 24px;
+    color: #4d4d4d;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+.todo-item-update {
+    margin-right: 24px;
+    margin-left: 10px;
+    font-size: 12px;
+    font-weight: 200;
+    line-height: 24px;
+    color: #4d4d4d;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+.todo-item-update:hover {
+    color: #777;
+}
+
+.todo-item-edit-tip {
+    font-size: 14px;
+    font-weight: 200;
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
