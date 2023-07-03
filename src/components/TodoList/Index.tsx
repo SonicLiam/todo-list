@@ -2,6 +2,8 @@
 import React, {useEffect, useState, useRef} from 'react';
 import TodoItem from '../TodoItem/Index'
 import './Index.css';
+import {Simulate} from "react-dom/test-utils";
+import compositionStart = Simulate.compositionStart;
 
 interface Todo {
     id: number;
@@ -20,6 +22,7 @@ const Index: React.FC = () => {
     const [newTask, setNewTask] = useState('');
     const [filter, setFilter] = useState(Filter.All); // 筛选
     const [collapsed, setCollapsed] = useState(true); // 是否折叠
+    const [shouldFetchTodos, setShouldFetchTodos] = useState(true); // 是否需要从localStorage中获取todos
 
     const filteredTodos = todos.filter((todo) => {
         switch (filter) {
@@ -64,6 +67,16 @@ const Index: React.FC = () => {
             todos.map((todo) => (todo.id === id ? {...todo, task: newTask} : todo))
         );
     };
+
+    React.useEffect(() => {
+        if (shouldFetchTodos) {
+            const todos = JSON.parse(localStorage.getItem('todos') || '[]');
+            setTodos(todos);
+            setShouldFetchTodos(false);
+        } else {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+    }, [todos, shouldFetchTodos]);
 
 
     return (
